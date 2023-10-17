@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="2023-10-01-19-00_1" author="ivanovna">
+        <createTable tableName="user">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="user_pk"/>
+            </column>
+            <column name="version" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="photographer_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reg_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="blocked" type="boolean">
+                <constraints nullable="true"/>
+            </column>
+            <column name="last_login_time" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="photographer">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="photographer_pk"/>
+            </column>
+            <column name="version" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="firstname" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="middle_name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="birthdate" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone" type="varchar(11)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contacts" type="jsonb">
+                <constraints nullable="true"/>
+            </column>
+            <column name="email" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="trainee" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text">
+                <constraints nullable="true"/>
+            </column>
+            <column name="score" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="image" type="blob">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2023-10-01-19-00_2" author="ivanovna">
+        <addForeignKeyConstraint baseTableName="user"
+                                 baseColumnNames="photographer_id"
+                                 constraintName="fk_user_photographer_id"
+                                 referencedTableName="photographer"
+                                 referencedColumnNames="id" />
+        <createIndex unique="false" tableName="user" indexName="idx_user_photographer_id">
+            <column name="photographer_id"/>
+        </createIndex>
+
+        <createIndex unique="true" tableName="photographer" indexName="idx_photographer_email_unique">
+            <column name="email"/>
+        </createIndex>
+
+        <createIndex unique="true" tableName="user" indexName="idx_user_email_unique">
+            <column name="email"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,19 @@
+package com.example.mayo.journey.service.dto.auth;
+
+import lombok.Builder;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
+
+import static lombok.AccessLevel.PRIVATE;
+
+@Data
+@Builder
+@FieldDefaults(level = PRIVATE)
+public class LoginResponse {
+
+    Long id;
+
+    String email;
+
+    Boolean authorize;
+}
