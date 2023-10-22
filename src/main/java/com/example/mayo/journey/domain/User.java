@@ -33,10 +33,6 @@ public class User extends BaseEntity {
     @Column
     LocalDateTime lastLoginTime;
 
-    @OneToOne
-    @JoinColumn(name = "photographer_id")
-    Photographer photographer;
-
     @Column
     @Enumerated(EnumType.STRING)
     UserStatus status;

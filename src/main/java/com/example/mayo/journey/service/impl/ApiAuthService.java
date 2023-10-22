@@ -4,9 +4,7 @@ import com.example.mayo.journey.service.dto.auth.LoginResponse;
 import com.example.mayo.journey.service.dto.auth.RegistrationResponse;
 import com.example.mayo.journey.service.dto.auth.AuthRequest;
 import com.example.mayo.journey.service.dto.auth.RegisterRequest;
-import com.example.mayo.journey.domain.Photographer;
 import com.example.mayo.journey.domain.User;
-import com.example.mayo.journey.repository.PhotographerRepository;
 import com.example.mayo.journey.repository.UserRepository;
 import com.example.mayo.journey.service.AuthService;
 import com.example.mayo.journey.support.UserStatus;
@@ -35,15 +33,13 @@ public class ApiAuthService implements AuthService {
 
     UserRepository userRepository;
 
-    PhotographerRepository photographerRepository;
-
     @Override
     public LoginResponse login(AuthRequest authRequest) {
         User user = userRepository.findUserByEmail(authRequest.getEmail());
 
         boolean authorize = false;
         // не аутентифицируем пользователя, если его не аппровнули
-        if (user.getStatus() != UserStatus.APPROVED) {
+        if (user.getStatus() == UserStatus.APPROVED) {
             Authentication authentication = apiAuthProvider.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             user.getId().toString(),
@@ -67,10 +63,8 @@ public class ApiAuthService implements AuthService {
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
             throw new IllegalArgumentException(); //todo заменить ошибку
         }
-        Photographer photographer = photographerRepository.save(buildPhotographer(registerRequest));
 
         User user = User.builder()
-                .photographer(photographer)
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .blocked(false)
@@ -81,18 +75,5 @@ public class ApiAuthService implements AuthService {
         userRepository.save(user);
 
         return RegistrationResponse.builder().id(user.getId()).build();
-    }
-
-    private Photographer buildPhotographer(RegisterRequest registerRequest) {
-        return Photographer.builder()
-                .email(registerRequest.getEmail())
-                .birthdate(registerRequest.getBirthdate())
-                .phone(registerRequest.getPhone())
-                .firstname(registerRequest.getFirstname())
-                .surname(registerRequest.getSurname())
-                .middleName(registerRequest.getMiddleName())
-                .contacts(registerRequest.getContacts())
-                .status("STATUS")
-                .build();
     }
 }

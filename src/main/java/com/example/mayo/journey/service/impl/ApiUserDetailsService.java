@@ -2,7 +2,7 @@ package com.example.mayo.journey.service.impl;
 
 import com.example.mayo.journey.domain.User;
 import com.example.mayo.journey.repository.UserRepository;
-import com.example.mayo.journey.support.UmnUserDetails;
+import com.example.mayo.journey.support.MayoUserDetails;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -33,6 +33,6 @@ public class ApiUserDetailsService implements UserDetailsService {
         String id = user.getId().toString();
         String password = user.getPassword();
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_USER");
-        return new UmnUserDetails(id, password, List.of(grantedAuthority));
+        return new MayoUserDetails(id, password, List.of(grantedAuthority));
     }
 }

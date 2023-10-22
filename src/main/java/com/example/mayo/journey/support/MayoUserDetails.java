@@ -8,9 +8,9 @@ import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UmnUserDetails extends User {
+public class MayoUserDetails extends User {
 
-    public UmnUserDetails(String id, String password, Collection<? extends GrantedAuthority> authorities) {
+    public MayoUserDetails(String id, String password, Collection<? extends GrantedAuthority> authorities) {
         super(id, password, authorities);
     }
 
