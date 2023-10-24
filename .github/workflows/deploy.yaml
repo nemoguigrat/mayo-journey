@@ -22,28 +22,28 @@ jobs:
       - name: run tests
         run: gradle test # Запускаем тесты.
 
-  prepare-environment:
-    runs-on: self-hosted
-    needs: test
-    steps:
-      - name: checkout repo
-        uses: actions/checkout@v3
-
-      - name: Stop and remove containers, networks
-        run: docker-compose down
-      - name: Remove unused data
-        run: docker system prune -a -f
-
-  deploy:
-    runs-on: self-hosted
-    needs: prepare-environment
-    environment: deploy-env
-    env:
-      POSTGRES_DB: ${{ vars.POSTGRES_DB }}
-      POSTGRES_PASSWORD: ${{ vars.POSTGRES_PASSWORD }}
-      POSTGRES_USER: ${{ vars.POSTGRES_USER }}
-    steps:
-      - name: checkout repo
-        uses: actions/checkout@v3
-      - name: docker-compose
-        run: docker-compose up -d
+#  prepare-environment:
+#    runs-on: self-hosted
+#    needs: test
+#    steps:
+#      - name: checkout repo
+#        uses: actions/checkout@v3
+#
+#      - name: Stop and remove containers, networks
+#        run: docker-compose down
+#      - name: Remove unused data
+#        run: docker system prune -a -f
+#
+#  deploy:
+#    runs-on: self-hosted
+#    needs: prepare-environment
+#    environment: deploy-env
+#    env:
+#      POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+#      POSTGRES_PASSWORD: ${{ vars.POSTGRES_PASSWORD }}
+#      POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+#    steps:
+#      - name: checkout repo
+#        uses: actions/checkout@v3
+#      - name: docker-compose
+#        run: docker-compose up -d
