@@ -1,4 +1,4 @@
-package com.example.mayo.journey.api.web.controller;
+package com.example.mayo.journey.api.controller;
 
 import com.example.mayo.journey.service.dto.auth.AuthRequest;
 import com.example.mayo.journey.service.dto.auth.RegisterRequest;
@@ -11,6 +11,8 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
+
 import static lombok.AccessLevel.PRIVATE;
 
 @WebApi
@@ -21,7 +23,7 @@ public class ApiAuthController {
     AuthService apiAuthService;
 
     @PostMapping("/auth/login")
-    public LoginResponse login(@RequestBody AuthRequest authRequest) {
+    public LoginResponse login(@Valid @RequestBody AuthRequest authRequest) {
         return apiAuthService.login(authRequest);
     }
 

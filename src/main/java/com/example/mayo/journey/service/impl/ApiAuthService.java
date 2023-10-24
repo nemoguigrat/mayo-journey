@@ -1,5 +1,6 @@
 package com.example.mayo.journey.service.impl;
 
+import com.example.mayo.journey.exception.RegistrationException;
 import com.example.mayo.journey.service.dto.auth.LoginResponse;
 import com.example.mayo.journey.service.dto.auth.RegistrationResponse;
 import com.example.mayo.journey.service.dto.auth.AuthRequest;
@@ -61,7 +62,7 @@ public class ApiAuthService implements AuthService {
     @Transactional
     public RegistrationResponse register(RegisterRequest registerRequest) {
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
-            throw new IllegalArgumentException(); //todo заменить ошибку
+            throw new RegistrationException("Пользователь с таким email уже существует");
         }
 
         User user = User.builder()
