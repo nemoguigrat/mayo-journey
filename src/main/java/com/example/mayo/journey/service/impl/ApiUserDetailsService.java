@@ -1,7 +1,7 @@
 package com.example.mayo.journey.service.impl;
 
-import com.example.mayo.journey.domain.User;
-import com.example.mayo.journey.repository.UserRepository;
+import com.example.mayo.journey.domain.jdbc.User;
+import com.example.mayo.journey.repository.jdbc.UserRepository;
 import com.example.mayo.journey.support.MayoUserDetails;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

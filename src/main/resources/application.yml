@@ -2,6 +2,16 @@ spring:
   application:
     name: mayo-journey
 
+  data:
+    mongodb:
+      host: mongodb
+      port: 27017
+      password: ${MONGO_PASS}
+      username: ${MONGO_USER}
+      database: ${MONGO_DB}
+      authentication-database: admin
+      uuid-representation: standard
+
   datasource:
     url: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
     username: ${POSTGRES_USER}

@@ -1,4 +1,4 @@
-package com.example.mayo.journey.domain;
+package com.example.mayo.journey.domain.jdbc;
 
 import com.example.mayo.journey.support.UserStatus;
 import com.example.mayo.journey.support.domain.BaseEntity;
