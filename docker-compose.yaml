@@ -11,9 +11,21 @@ services:
     ports:
       - 5432:5432
 
-  photographer:
+  mongodb:
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASS}
+      - MONGO_INITDB_ROOT_DATABASE=${MONGO_DB}
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - 27017:27017
+
+  journey:
     depends_on:
       - postgres
+      - mongodb
     container_name: mayo-journey
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -27,4 +39,6 @@ services:
 
 volumes:
   db-data:
+    driver: local
+  mongo-data:
     driver: local

@@ -1,6 +1,6 @@
-package com.example.mayo.journey.repository;
+package com.example.mayo.journey.repository.jdbc;
 
-import com.example.mayo.journey.domain.User;
+import com.example.mayo.journey.domain.jdbc.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
