@@ -1,10 +1,13 @@
 package com.example.mayo.journey.config;
 
+import com.example.mayo.journey.support.DocumentStatus;
+import com.example.mayo.journey.support.converter.StringToEnumConverter;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -27,9 +30,9 @@ public class WebConfig implements WebMvcConfigurer {
         return bean;
     }
 
-//    @Override
-//    public void addFormatters(FormatterRegistry registry) {
-//        registry.addConverter(String.class, TechniqueType.class, new StringToEnumConverter<>(TechniqueType.class));
-//    }
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(String.class, DocumentStatus.class, new StringToEnumConverter<>(DocumentStatus.class));
+    }
 
 }

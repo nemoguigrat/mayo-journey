@@ -13,15 +13,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DocumentShort extends BaseEntity {
-
-    @ManyToOne
-    @JoinColumn(name = "attachment_info_id", referencedColumnName = "id")
-    AttachmentInfo attachmentInfo;
-
-    @ManyToOne
-    @JoinColumn(name = "document_id", referencedColumnName = "id")
-    DocumentIndex documentIndex;
+public class Theme extends BaseEntity {
 
     @Column
     String name;
@@ -29,6 +21,6 @@ public class DocumentShort extends BaseEntity {
     @Column
     String description;
 
-    @Column
-    String address;
+    @Column(name = "public")
+    Boolean publicTheme;
 }
