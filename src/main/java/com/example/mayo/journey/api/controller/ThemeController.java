@@ -1,9 +1,8 @@
 package com.example.mayo.journey.api.controller;
 
-import com.example.mayo.journey.service.DocumentShortService;
+import com.example.mayo.journey.service.ThemeService;
 import com.example.mayo.journey.service.dto.ListResponse;
-import com.example.mayo.journey.service.dto.journey.DocumentShortFilter;
-import com.example.mayo.journey.service.dto.journey.DocumentShortResponse;
+import com.example.mayo.journey.service.dto.theme.ThemeResponse;
 import com.example.mayo.journey.support.MayoUserDetails;
 import com.example.mayo.journey.support.api.WebApi;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,13 +19,13 @@ import static lombok.AccessLevel.PRIVATE;
 @WebApi
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = PRIVATE)
-public class JourneyController {
+public class ThemeController {
 
-    DocumentShortService documentShortService;
+    ThemeService themeService;
 
-    @GetMapping("/journey/all")
-    @Operation(summary = "Список маршрутов с пагинацией")
-    public ListResponse<DocumentShortResponse> findAll(@Parameter(hidden = true) @AuthenticationPrincipal MayoUserDetails user, @ParameterObject DocumentShortFilter filter, @ParameterObject Pageable pageable) {
-        return documentShortService.findAll(user, pageable, filter);
+    @GetMapping("/theme/all")
+    @Operation(summary = "Список тем с пагинацией")
+    public ListResponse<ThemeResponse> findAll(@Parameter(hidden = true) @AuthenticationPrincipal MayoUserDetails user, @ParameterObject Pageable pageable) {
+        return themeService.findAll(pageable);
     }
 }
