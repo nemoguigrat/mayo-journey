@@ -4,6 +4,7 @@ import com.example.mayo.journey.support.DocumentStatus;
 import com.example.mayo.journey.support.domain.BaseEntity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.FieldNameConstants;
 
 import javax.persistence.*;
 
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @Getter
 @Builder
 @NoArgsConstructor
+@FieldNameConstants
 @AllArgsConstructor
 public class DocumentIndex extends BaseEntity {
 

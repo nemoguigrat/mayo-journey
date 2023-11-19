@@ -3,6 +3,7 @@ package com.example.mayo.journey.domain.jdbc;
 import com.example.mayo.journey.support.domain.BaseEntity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.FieldNameConstants;
 
 import javax.persistence.*;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Builder
+@FieldNameConstants
 @NoArgsConstructor
 @AllArgsConstructor
 public class DocumentShort extends BaseEntity {

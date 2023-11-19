@@ -2,12 +2,11 @@ package com.example.mayo.journey.service.impl;
 
 import com.example.mayo.journey.domain.jdbc.DocumentShort;
 import com.example.mayo.journey.repository.jdbc.DocumentShortRepository;
-import com.example.mayo.journey.repository.jdbc.UserRepository;
+import com.example.mayo.journey.repository.jdbc.specification.DocumentShortSpec;
 import com.example.mayo.journey.service.DocumentShortService;
 import com.example.mayo.journey.service.dto.ListResponse;
 import com.example.mayo.journey.service.dto.journey.DocumentShortFilter;
 import com.example.mayo.journey.service.dto.journey.DocumentShortResponse;
-import com.example.mayo.journey.support.DocumentStatus;
 import com.example.mayo.journey.support.MayoUserDetails;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,17 +21,10 @@ import org.springframework.stereotype.Service;
 public class DocumentShortServiceImpl implements DocumentShortService {
 
     DocumentShortRepository documentShortRepository;
-    UserRepository userRepository;
 
     @Override
     public ListResponse<DocumentShortResponse> findAll(MayoUserDetails user, Pageable pageable, DocumentShortFilter filter) {
-        Page<DocumentShort> page;
-
-        if (filter.getStatus() == DocumentStatus.DRAFT) {
-            page = documentShortRepository.findByUser(user.getId(), pageable);
-        } else {
-            page = documentShortRepository.findByFilter(filter.getStatus(), filter.getThemeId(), pageable);
-        }
+        Page<DocumentShort> page = documentShortRepository.findAll(DocumentShortSpec.documentShortFilter(user, filter), pageable);
 
         return ListResponse.of(page.map(this::buildDocumentShort));
     }
@@ -41,6 +33,8 @@ public class DocumentShortServiceImpl implements DocumentShortService {
         return DocumentShortResponse.builder()
                 .address(documentShort.getAddress())
                 .description(documentShort.getDescription())
+                .documentIndexId(documentShort.getDocumentIndex().getId())
+                .attachmentInfoId(documentShort.getAttachmentInfo().getId())
                 .name(documentShort.getName())
                 .build();
     }
