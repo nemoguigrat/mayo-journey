@@ -37,7 +37,7 @@ public class DocumentShortSpec {
                 predicates.add(theme);
 
             }
-
+            // нужно для count-query в запросах с пагинацией
             if (Long.class != query.getResultType()) {
                 root.fetch(DocumentShort.Fields.documentIndex).fetch(DocumentIndex.Fields.theme);
                 root.fetch(DocumentShort.Fields.attachmentInfo);
