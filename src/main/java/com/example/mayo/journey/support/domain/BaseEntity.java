@@ -46,5 +46,5 @@ public abstract class BaseEntity {
     @Override
     public int hashCode() {
         return 31;
-    }
+    } // ??? :)
 }

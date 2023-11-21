@@ -40,16 +40,16 @@ public class ApiAuthService implements AuthService {
 
         boolean authorize = false;
         // не аутентифицируем пользователя, если его не аппровнули
-        if (user.getStatus() == UserStatus.APPROVED) {
-            Authentication authentication = apiAuthProvider.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            user.getId().toString(),
-                            authRequest.getPassword())
-            );
+        // if (user.getStatus() == UserStatus.APPROVED) {
+        Authentication authentication = apiAuthProvider.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        user.getId().toString(),
+                        authRequest.getPassword())
+        );
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            authorize = true;
-        }
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        authorize = true;
+        //}
 
         return LoginResponse.builder()
                 .id(user.getId())
