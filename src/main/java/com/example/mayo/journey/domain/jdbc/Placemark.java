@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Table
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,11 +21,11 @@ public class Placemark extends BaseEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     User user;
 
-    @ManyToOne
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "attachment_info_id", referencedColumnName = "id")
     AttachmentInfo attachmentInfo;
 
-    @ManyToOne
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "document_id", referencedColumnName = "id")
     DocumentIndex documentIndex;
 
