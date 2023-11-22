@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level= AccessLevel.PRIVATE)
 public class PlacemarkFullData {
     Long id;
-    Long user_id;
+    Long userId;
     String name;
     String description;
     String address;

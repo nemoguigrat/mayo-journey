@@ -11,8 +11,10 @@ import com.example.mayo.journey.support.MayoUserDetails;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -25,48 +27,41 @@ public class PlacemarkService implements IPlacemarkService {
     UserRepository userRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public ListResponse<PlacemarkShortResponse> findAll(Pageable pageable) {
-        //TODO: Remove try-catch
-        try {
-            var page = placemarkRepository.findByPublicMark(true, pageable);
-            return ListResponse.of(page.map(this::buildPlacemarkShort));
-        }
-        catch (Exception ex) {
-            return null;
-        }
+        Page<Placemark> page = placemarkRepository.findByPublicMark(true, pageable);
+        return ListResponse.of(page.map(this::buildPlacemarkShort));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ListResponse<PlacemarkShortResponse> findAllByUser(MayoUserDetails user, Pageable pageable) {
-        //TODO: Remove try-catch
-        try {
-            var page = placemarkRepository.findByPublicMarkAndUser(false, userRepository.findUserById(user.getId()), pageable);
-            return ListResponse.of(page.map(this::buildPlacemarkShort));
-        }
-        catch (Exception ex) {
-            return null;
-        }
+        Page<Placemark> page = placemarkRepository.findByPublicMarkAndUser(false, userRepository.findUserById(user.getId()), pageable);
+        return ListResponse.of(page.map(this::buildPlacemarkShort));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<PlacemarkFullData> findPlacemark(Long id) {
-        var placemark = placemarkRepository.findById(id).orElse(null);
+        Placemark placemark = placemarkRepository.findById(id).orElse(null);
         if (placemark == null) return Optional.empty();
 
         return Optional.ofNullable(buildPlacemarkFull(placemark));
     }
 
     @Override
-    public Placemark createPlacemark(MayoUserDetails owner, PlacemarkFullData placemark) {
-        var pm = buildPlacemarkFromDTO(placemark);
-        pm.setUser(userRepository.findUserById(owner.getId()));
-        placemarkRepository.save(pm);
-        return pm;
+    @Transactional
+    public Placemark createPlacemark(MayoUserDetails owner, PlacemarkFullData placemarkData) {
+        Placemark placemark = buildPlacemarkFromDTO(placemarkData);
+        placemark.setUser(userRepository.findUserById(owner.getId()));
+        placemarkRepository.save(placemark);
+        return placemark;
     }
 
     @Override
+    @Transactional
     public Placemark updatePlacemark(Long id, PlacemarkFullData placemark) {
-        var existingPlacemark = placemarkRepository.findById(id).orElse(null);
+        Placemark existingPlacemark = placemarkRepository.findById(id).orElse(null);
         if (existingPlacemark == null)
         {
             return null;
@@ -118,28 +113,13 @@ public class PlacemarkService implements IPlacemarkService {
 
     private Placemark updatePlacemarkWithDTO(Placemark target, PlacemarkFullData data) {
         if (target != null) {
-            // Fuck it
-            if (data.getName() != null) {
-                target.setName(data.getName());
-            }
-            if (data.getDescription() != null) {
-                target.setDescription(data.getDescription());
-            }
-            if (data.getAddress() != null) {
-                target.setAddress(data.getAddress());
-            }
-            if (data.getLongitude() != null) {
-                target.setLongitude(data.getLongitude());
-            }
-            if (data.getLatitude() != null) {
-                target.setLatitude(data.getLatitude());
-            }
-            if (data.getType() != null) {
-                target.setType(data.getType());
-            }
-            if (data.getPublicMark() != null) {
-                target.setPublicMark(data.getPublicMark());
-            }
+            target.setName(data.getName());
+            target.setDescription(data.getDescription());
+            target.setAddress(data.getAddress());
+            target.setLongitude(data.getLongitude());
+            target.setLatitude(data.getLatitude());
+            target.setType(data.getType());
+            target.setPublicMark(data.getPublicMark());
 
             return placemarkRepository.save(target);
         }

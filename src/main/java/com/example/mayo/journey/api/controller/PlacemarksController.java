@@ -37,18 +37,12 @@ public class PlacemarksController {
     }
 
     @PostMapping("/placemark/create")
-    public ResponseEntity<?> createPlacemark(@Parameter(hidden = true) @AuthenticationPrincipal MayoUserDetails userAuthor, @RequestBody PlacemarkFullData placemarkData) {
-        if (placemarkService.createPlacemark(userAuthor, placemarkData) != null)
-            return ResponseEntity.ok().build();
-
-        return ResponseEntity.status(500).build();
+    public void createPlacemark(@Parameter(hidden = true) @AuthenticationPrincipal MayoUserDetails userAuthor, @RequestBody PlacemarkFullData placemarkData) {
+        placemarkService.createPlacemark(userAuthor, placemarkData);
     }
 
     @PutMapping("placemark/update/{id}")
-    public ResponseEntity<?> updatePlacemark(@Parameter(hidden = true) @AuthenticationPrincipal MayoUserDetails user, @PathVariable Long id, @RequestBody PlacemarkFullData data) {
-        if (placemarkService.updatePlacemark(id, data) != null)
-            return ResponseEntity.ok().build();
-
-        return ResponseEntity.status(500).build();
+    public void updatePlacemark(@Parameter(hidden = true) @AuthenticationPrincipal MayoUserDetails user, @PathVariable Long id, @RequestBody PlacemarkFullData data) {
+        placemarkService.updatePlacemark(id, data);
     }
 }
