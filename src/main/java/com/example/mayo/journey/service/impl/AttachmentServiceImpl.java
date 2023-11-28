@@ -43,13 +43,20 @@ public class AttachmentServiceImpl implements AttachmentService {
     public AttachmentResource download(MayoUserDetails user, Long id) {
         Attachment attachment = attachmentRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
+        try {
+            Path filePath = baseStoragePath.resolve(Path.of(attachment.getPath()).normalize());
 
-        Path filePath = baseStoragePath.resolve(Path.of(attachment.getPath()).normalize());
+            Resource resource = new PathResource(filePath);
+            return AttachmentResource.builder()
+                    .content(resource)
+                    .contentType(attachment.getContentType())
+                    .build();
 
-        Resource resource = new PathResource(filePath);
-        return AttachmentResource.builder()
-                .content(resource)
-                .contentType(attachment.getContentType())
-                .build();
+        } catch (Exception e) {
+
+            throw new NotFoundException();
+        }
+
+
     }
 }
