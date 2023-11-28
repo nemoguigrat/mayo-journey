@@ -20,10 +20,7 @@ public class Attachment extends BaseEntity {
     AttachmentInfo attachmentInfo;
 
     @Column
-    String filename;
-
-    @Column
-    String extension;
+    String contentType;
 
     @Column
     String path;
