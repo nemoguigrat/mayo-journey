@@ -9,13 +9,21 @@ import com.example.mayo.journey.service.dto.attachment.AttachmentResource;
 import com.example.mayo.journey.support.MayoUserDetails;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.apache.tika.Tika;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.util.UUID;
 
 @Service
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -59,4 +67,52 @@ public class AttachmentServiceImpl implements AttachmentService {
 
 
     }
+
+    @Override
+    @Transactional
+    public Attachment upload(MultipartFile file) {
+        String fileName = UUID.randomUUID().toString();
+
+        try {
+            Path datePath = pathByDate();
+            Path relativePath = datePath.resolve(fileName);
+            Path targetLocation = this.baseStoragePath.resolve(datePath);
+
+            if (!Files.exists(targetLocation)) {
+                Files.createDirectories(this.baseStoragePath.resolve(targetLocation));
+            }
+
+            long size = Files.copy(file.getInputStream(), targetLocation.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+
+            String ext = resolveContentType(file.getBytes(), fileName);
+
+            Attachment attachment = Attachment.builder()
+                    .path(relativePath.toString())
+                    .size(size)
+                    .contentType(ext)
+                    .build();
+
+            return attachmentRepository.save(attachment);
+
+        } catch (IOException ex) {
+            throw new IllegalArgumentException("Could not store file " + fileName + ". Please try again!", ex);
+        }
+    }
+
+    private static Path pathByDate() {
+        LocalDate today = LocalDate.now();
+
+        String year = String.valueOf(today.getYear());
+        String month = String.valueOf(today.getMonthValue());
+        String day = String.valueOf(today.getDayOfMonth());
+
+        return Path.of(year, month, day).normalize();
+    }
+
+    public static String resolveContentType(byte[] content, String filename) {
+        Tika tika = new Tika();
+
+        return tika.detect(content, filename);
+    }
+
 }

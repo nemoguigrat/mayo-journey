@@ -1,13 +1,17 @@
 package com.example.mayo.journey.service.impl;
 
+import com.example.mayo.journey.domain.jdbc.Attachment;
 import com.example.mayo.journey.domain.jdbc.Placemark;
+import com.example.mayo.journey.exception.NotFoundException;
 import com.example.mayo.journey.repository.jdbc.PlacemarkRepository;
 import com.example.mayo.journey.repository.jdbc.UserRepository;
+import com.example.mayo.journey.service.AttachmentService;
 import com.example.mayo.journey.service.IPlacemarkService;
 import com.example.mayo.journey.service.dto.ListResponse;
-import com.example.mayo.journey.service.dto.journey.PlacemarkFullData;
-import com.example.mayo.journey.service.dto.journey.PlacemarkShortResponse;
+import com.example.mayo.journey.service.dto.placemark.PlacemarkFullData;
+import com.example.mayo.journey.service.dto.placemark.PlacemarkShortResponse;
 import com.example.mayo.journey.support.MayoUserDetails;
+import com.example.mayo.journey.support.utils.NullSafeUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,8 +19,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
+
+import static com.example.mayo.journey.support.utils.NullSafeUtils.safeGetId;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +32,7 @@ public class PlacemarkService implements IPlacemarkService {
 
     PlacemarkRepository placemarkRepository;
     UserRepository userRepository;
+    AttachmentService attachmentService;
 
     @Override
     @Transactional(readOnly = true)
@@ -60,13 +68,22 @@ public class PlacemarkService implements IPlacemarkService {
 
     @Override
     @Transactional
-    public Placemark updatePlacemark(Long id, PlacemarkFullData placemark) {
-        Placemark existingPlacemark = placemarkRepository.findById(id).orElse(null);
-        if (existingPlacemark == null)
-        {
-            return null;
-        }
+    public Placemark updatePlacemark(MayoUserDetails owner, Long id, PlacemarkFullData placemark) {
+        Placemark existingPlacemark = placemarkRepository.findByUser_IdAndId(owner.getId(), id).orElseThrow(NotFoundException::new);
+
         return updatePlacemarkWithDTO(existingPlacemark, placemark);
+    }
+
+    @Override
+    @Transactional
+    public Long updatePlacemarkImage(MayoUserDetails user, Long id, MultipartFile file) {
+        Placemark placemark = placemarkRepository.findByUser_IdAndId(user.getId(), id).orElseThrow(NotFoundException::new);
+
+        Attachment attachment = attachmentService.upload(file);
+
+        placemark.setAttachment(attachment);
+
+        return attachment.getId();
     }
 
     private PlacemarkShortResponse buildPlacemarkShort(Placemark placemark) {
@@ -75,15 +92,7 @@ public class PlacemarkService implements IPlacemarkService {
                 .name(placemark.getName())
                 .longtitude(placemark.getLongitude())
                 .latitude(placemark.getLatitude())
-                .build();
-    }
-
-    private PlacemarkShortResponse buildPlacemarkShort(PlacemarkFullData placemark){
-        return PlacemarkShortResponse.builder()
-                .id(placemark.getId())
-                .name(placemark.getName())
-                .longtitude(placemark.getLongitude())
-                .latitude(placemark.getLatitude())
+                .attachmentId(safeGetId(placemark.getAttachment()))
                 .build();
     }
 
@@ -96,6 +105,7 @@ public class PlacemarkService implements IPlacemarkService {
                 .latitude(placemark.getLatitude())
                 .type(placemark.getType())
                 .publicMark(placemark.getPublicMark())
+                .attachmentId(safeGetId(placemark.getAttachment()))
                 .build();
     }
 

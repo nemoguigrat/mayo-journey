@@ -1,5 +1,6 @@
 package com.example.mayo.journey.service.dto.journey;
 
+import com.example.mayo.journey.service.dto.placemark.PlacemarkShortResponse;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -11,9 +12,11 @@ import static lombok.AccessLevel.PRIVATE;
 @Data
 @Builder
 @FieldDefaults(level = PRIVATE)
-public class DocumentShortResponse {
+public class DocumentShortWithPlacemarks {
 
     Long id;
+
+    Long attachmentInfoId;
 
     List<Long> attachments;
 
@@ -24,4 +27,6 @@ public class DocumentShortResponse {
     String description;
 
     String address;
+
+    List<PlacemarkShortResponse> placemarks;
 }
