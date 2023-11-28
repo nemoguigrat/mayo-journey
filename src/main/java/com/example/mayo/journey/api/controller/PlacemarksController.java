@@ -3,8 +3,8 @@ package com.example.mayo.journey.api.controller;
 
 import com.example.mayo.journey.service.IPlacemarkService;
 import com.example.mayo.journey.service.dto.ListResponse;
-import com.example.mayo.journey.service.dto.journey.PlacemarkFullData;
-import com.example.mayo.journey.service.dto.journey.PlacemarkShortResponse;
+import com.example.mayo.journey.service.dto.placemark.PlacemarkFullData;
+import com.example.mayo.journey.service.dto.placemark.PlacemarkShortResponse;
 import com.example.mayo.journey.support.MayoUserDetails;
 import com.example.mayo.journey.support.api.WebApi;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,9 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @WebApi
 @RequiredArgsConstructor
@@ -41,8 +41,13 @@ public class PlacemarksController {
         placemarkService.createPlacemark(userAuthor, placemarkData);
     }
 
-    @PutMapping("placemark/update/{id}")
+    @PutMapping("/placemark/update/{id}")
     public void updatePlacemark(@Parameter(hidden = true) @AuthenticationPrincipal MayoUserDetails user, @PathVariable Long id, @RequestBody PlacemarkFullData data) {
-        placemarkService.updatePlacemark(id, data);
+        placemarkService.updatePlacemark(user, id, data);
+    }
+
+    @PostMapping("/placemark/image/{id}")
+    public void updatePlacemarkImage(@Parameter(hidden = true) @AuthenticationPrincipal MayoUserDetails user, @PathVariable Long id, @RequestPart(name = "file") MultipartFile file) {
+        placemarkService.updatePlacemarkImage(user, id, file);
     }
 }

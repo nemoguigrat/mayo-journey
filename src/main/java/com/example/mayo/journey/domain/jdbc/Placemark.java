@@ -22,8 +22,8 @@ public class Placemark extends BaseEntity {
     User user;
 
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "attachment_info_id", referencedColumnName = "id")
-    AttachmentInfo attachmentInfo;
+    @JoinColumn(name = "attachment_id", referencedColumnName = "id")
+    Attachment attachment;
 
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "document_id", referencedColumnName = "id")
