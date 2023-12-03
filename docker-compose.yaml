@@ -1,6 +1,6 @@
 services:
   postgres:
-    container_name: postgres
+    container_name: postgres_mayo
     image: 'postgres:latest'
     volumes:
       - db-data:/var/lib/postgresql/data
@@ -31,9 +31,15 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
+      FILE_PATH: /media
+      MONGO_USER: ${MONGO_USER}
+      MONGO_PASS: ${MONGO_PASS}
+      MONGO_DB: ${MONGO_DB}
     build:
       dockerfile: Dockerfile
       context: .
+    volumes:
+      - media-files:/media
     ports:
       - 8080:8080
 
@@ -41,4 +47,6 @@ volumes:
   db-data:
     driver: local
   mongo-data:
+    driver: local
+  media-files:
     driver: local

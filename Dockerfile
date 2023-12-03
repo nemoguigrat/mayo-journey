@@ -5,4 +5,4 @@ WORKDIR /home/gradle/source
 RUN gradle bootJar --no-daemon
 
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","build/libs/mayo.jar"]
+ENTRYPOINT ["java","-jar","build/libs/mayo-journey.jar"]

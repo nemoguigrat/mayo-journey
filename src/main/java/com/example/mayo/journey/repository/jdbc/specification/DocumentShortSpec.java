@@ -1,6 +1,5 @@
 package com.example.mayo.journey.repository.jdbc.specification;
 
-import com.example.mayo.journey.domain.jdbc.AttachmentInfo;
 import com.example.mayo.journey.domain.jdbc.DocumentIndex;
 import com.example.mayo.journey.domain.jdbc.DocumentShort;
 import com.example.mayo.journey.service.dto.journey.DocumentShortFilter;
@@ -40,8 +39,9 @@ public class DocumentShortSpec {
             }
             // нужно для count-query в запросах с пагинацией
             if (Long.class != query.getResultType()) {
-                root.fetch(DocumentShort.Fields.documentIndex).fetch(DocumentIndex.Fields.theme);
-                root.fetch(DocumentShort.Fields.attachmentInfo).fetch(AttachmentInfo.Fields.attachments, JoinType.LEFT);
+                Fetch<Object, Object> index = root.fetch(DocumentShort.Fields.documentIndex);
+                index.fetch(DocumentIndex.Fields.placemarks).fetch("attachment");
+                index.fetch(DocumentIndex.Fields.theme);
                 query.distinct(true);
             }
 
