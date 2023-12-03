@@ -15,7 +15,7 @@ public class DocumentShortResponse {
 
     Long id;
 
-    List<Long> attachments;
+    Long placemarkAttachmentId;
 
     Long documentIndexId;
 

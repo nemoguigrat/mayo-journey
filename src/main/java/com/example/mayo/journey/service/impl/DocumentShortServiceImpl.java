@@ -1,5 +1,6 @@
 package com.example.mayo.journey.service.impl;
 
+import com.example.mayo.journey.domain.jdbc.DocumentIndex;
 import com.example.mayo.journey.domain.jdbc.DocumentShort;
 import com.example.mayo.journey.domain.jdbc.Placemark;
 import com.example.mayo.journey.exception.NotFoundException;
@@ -13,7 +14,6 @@ import com.example.mayo.journey.service.dto.journey.DocumentShortResponse;
 import com.example.mayo.journey.service.dto.journey.DocumentShortWithPlacemarks;
 import com.example.mayo.journey.service.dto.placemark.PlacemarkShortResponse;
 import com.example.mayo.journey.support.MayoUserDetails;
-import com.example.mayo.journey.support.domain.BaseEntity;
 import com.example.mayo.journey.support.utils.NullSafeUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,7 +48,6 @@ public class DocumentShortServiceImpl implements DocumentShortService {
         return DocumentShortWithPlacemarks.builder()
                 .id(documentShort.getId())
                 .documentIndexId(documentShort.getDocumentIndex().getId())
-                .attachments(documentShort.getAttachmentInfo().getAttachments().stream().map(BaseEntity::getId).collect(Collectors.toList()))
                 .address(documentShort.getAddress())
                 .name(documentShort.getName())
                 .placemarks(placemarks.stream().map(this::buildPlacemarkShort).collect(Collectors.toList()))
@@ -56,14 +55,21 @@ public class DocumentShortServiceImpl implements DocumentShortService {
     }
 
     private DocumentShortResponse buildDocumentShort(DocumentShort documentShort) {
-        return DocumentShortResponse.builder()
+        Optional<DocumentIndex> index = Optional.ofNullable(documentShort.getDocumentIndex());
+
+        DocumentShortResponse.DocumentShortResponseBuilder builder = DocumentShortResponse.builder()
                 .id(documentShort.getId())
                 .address(documentShort.getAddress())
                 .description(documentShort.getDescription())
-                .documentIndexId(documentShort.getDocumentIndex().getId())
-                .attachments(documentShort.getAttachmentInfo().getAttachments().stream().map(BaseEntity::getId).collect(Collectors.toList()))
-                .name(documentShort.getName())
-                .build();
+                .name(documentShort.getName());
+
+        if (index.isPresent()) {
+            Long attachId = index.get().getPlacemarks().stream().map(x -> NullSafeUtils.safeGetId(x.getAttachment())).findFirst().orElse(null);
+            builder.documentIndexId(index.get().getId())
+                    .placemarkAttachmentId(attachId);
+        }
+
+        return builder.build();
     }
 
     private PlacemarkShortResponse buildPlacemarkShort(Placemark placemark) {

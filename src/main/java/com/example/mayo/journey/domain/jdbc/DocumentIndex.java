@@ -7,6 +7,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.FieldNameConstants;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table
@@ -27,6 +29,9 @@ public class DocumentIndex extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "theme_id", referencedColumnName = "id")
     Theme theme;
+
+    @OneToMany(mappedBy = "documentIndex")
+    Set<Placemark> placemarks = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     DocumentStatus status;

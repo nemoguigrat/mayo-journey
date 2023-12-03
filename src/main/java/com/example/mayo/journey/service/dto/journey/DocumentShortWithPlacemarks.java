@@ -16,10 +16,6 @@ public class DocumentShortWithPlacemarks {
 
     Long id;
 
-    Long attachmentInfoId;
-
-    List<Long> attachments;
-
     Long documentIndexId;
 
     String name;
