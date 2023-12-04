@@ -11,7 +11,6 @@ import com.example.mayo.journey.service.dto.ListResponse;
 import com.example.mayo.journey.service.dto.placemark.PlacemarkFullData;
 import com.example.mayo.journey.service.dto.placemark.PlacemarkShortResponse;
 import com.example.mayo.journey.support.MayoUserDetails;
-import com.example.mayo.journey.support.utils.NullSafeUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -45,6 +44,13 @@ public class PlacemarkService implements IPlacemarkService {
     @Transactional(readOnly = true)
     public ListResponse<PlacemarkShortResponse> findAllByUser(MayoUserDetails user, Pageable pageable) {
         Page<Placemark> page = placemarkRepository.findByPublicMarkAndUser(false, userRepository.findUserById(user.getId()), pageable);
+        return ListResponse.of(page.map(this::buildPlacemarkShort));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ListResponse<PlacemarkShortResponse> findNearest(double latitude, double longitude, Pageable pageable) {
+        Page<Placemark> page = placemarkRepository.findNearestPlacemarks(latitude, longitude, pageable);
         return ListResponse.of(page.map(this::buildPlacemarkShort));
     }
 
@@ -90,7 +96,7 @@ public class PlacemarkService implements IPlacemarkService {
         return PlacemarkShortResponse.builder()
                 .id(placemark.getId())
                 .name(placemark.getName())
-                .longtitude(placemark.getLongitude())
+                .longitude(placemark.getLongitude())
                 .latitude(placemark.getLatitude())
                 .attachmentId(safeGetId(placemark.getAttachment()))
                 .build();

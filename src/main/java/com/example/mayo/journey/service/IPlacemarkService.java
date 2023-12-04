@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface IPlacemarkService
 {
     ListResponse<PlacemarkShortResponse> findAll(Pageable pageable);
-
+    ListResponse<PlacemarkShortResponse> findNearest(double latitude, double longitude, Pageable pageable);
     ListResponse<PlacemarkShortResponse> findAllByUser(MayoUserDetails user, Pageable pageable);
 
     Optional<PlacemarkFullData> findPlacemark(Long placemarkId);
