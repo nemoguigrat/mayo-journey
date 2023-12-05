@@ -38,12 +38,7 @@ public class PlacemarksController {
 
     @GetMapping("/placemark/nearest")
     public ListResponse<PlacemarkShortResponse> getNearest(@RequestParam("latitude") String latitude, @RequestParam("longitude") String longitude, @ParameterObject Pageable pageable) {
-        try{
             return placemarkService.findNearest(Double.parseDouble(latitude), Double.parseDouble(longitude), pageable);
-        }
-        catch (Exception ex) {
-            return null;
-        }
     }
 
     @PostMapping("/placemark/create")
