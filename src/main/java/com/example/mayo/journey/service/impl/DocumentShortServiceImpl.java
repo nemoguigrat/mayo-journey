@@ -76,7 +76,7 @@ public class DocumentShortServiceImpl implements DocumentShortService {
         return PlacemarkShortResponse.builder()
                 .id(placemark.getId())
                 .name(placemark.getName())
-                .longtitude(placemark.getLongitude())
+                .longitude(placemark.getLongitude())
                 .latitude(placemark.getLatitude())
                 .attachmentId(NullSafeUtils.safeGetId(placemark.getAttachment()))
                 .build();

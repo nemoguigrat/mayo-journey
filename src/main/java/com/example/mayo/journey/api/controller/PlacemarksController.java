@@ -36,6 +36,11 @@ public class PlacemarksController {
         return placemarkService.findPlacemark(id).orElse(null);
     }
 
+    @GetMapping("/placemark/nearest")
+    public ListResponse<PlacemarkShortResponse> getNearest(@RequestParam("latitude") String latitude, @RequestParam("longitude") String longitude, @ParameterObject Pageable pageable) {
+            return placemarkService.findNearest(Double.parseDouble(latitude), Double.parseDouble(longitude), pageable);
+    }
+
     @PostMapping("/placemark/create")
     public void createPlacemark(@Parameter(hidden = true) @AuthenticationPrincipal MayoUserDetails userAuthor, @RequestBody PlacemarkFullData placemarkData) {
         placemarkService.createPlacemark(userAuthor, placemarkData);

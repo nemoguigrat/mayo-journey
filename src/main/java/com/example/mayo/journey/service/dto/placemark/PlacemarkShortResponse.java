@@ -14,7 +14,7 @@ public class PlacemarkShortResponse {
 
     String name;
 
-    String longtitude;
+    String longitude;
 
     String latitude;
 
