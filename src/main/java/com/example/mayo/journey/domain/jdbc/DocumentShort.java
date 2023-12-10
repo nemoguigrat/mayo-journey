@@ -1,5 +1,6 @@
 package com.example.mayo.journey.domain.jdbc;
 
+import com.example.mayo.journey.service.dto.journey.DocumentShortRequest;
 import com.example.mayo.journey.support.domain.BaseEntity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -33,4 +34,10 @@ public class DocumentShort extends BaseEntity {
 
     @Column
     String address;
+
+    public void updateFromRequest(DocumentShortRequest request) {
+        this.name = request.getName();
+        this.description = request.getDescription();
+        this.address = request.getAddress();
+    }
 }
