@@ -1,22 +1,16 @@
 package com.example.mayo.journey.service.dto.journey;
 
-import com.example.mayo.journey.service.dto.placemark.PlacemarkShortResponse;
+import com.example.mayo.journey.support.DocumentStatus;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 import static lombok.AccessLevel.PRIVATE;
 
 @Data
 @Builder
 @FieldDefaults(level = PRIVATE)
-public class DocumentShortWithPlacemarks {
-
-    Long id;
-
-    Long documentIndexId;
+public class DocumentShortRequest {
 
     String name;
 
@@ -26,5 +20,5 @@ public class DocumentShortWithPlacemarks {
 
     Long themeId;
 
-    List<PlacemarkShortResponse> placemarks;
+    DocumentStatus status;
 }

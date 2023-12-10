@@ -28,6 +28,7 @@ public class DocumentIndex extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "theme_id", referencedColumnName = "id")
+    @Setter
     Theme theme;
 
     @OneToMany(mappedBy = "documentIndex")
