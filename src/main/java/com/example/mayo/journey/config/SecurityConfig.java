@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -67,7 +68,7 @@ public class SecurityConfig {
     public SecurityFilterChain webSecurityConfig(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(Customizer.withDefaults())
                 .antMatcher(PATH_API)
                 .authenticationProvider(apiAuthProvider())
                 .authorizeHttpRequests(customizer -> customizer
@@ -111,7 +112,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 //        configuration.setAllowedOrigins(List.of("*"));
 
-        configuration.setAllowedOriginPatterns(List.of("http://localhost:[*]", "https://localhost:[*]"));
+        configuration.setAllowedOriginPatterns(List.of("http://localhost:[*]", "https://localhost:[*]", "http://127.0.0.1:[*]", "https://127.0.0.1:[*]"));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
