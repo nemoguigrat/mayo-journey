@@ -18,6 +18,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Slf4j
 @Configuration
@@ -62,6 +67,7 @@ public class SecurityConfig {
     public SecurityFilterChain webSecurityConfig(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .antMatcher(PATH_API)
                 .authenticationProvider(apiAuthProvider())
                 .authorizeHttpRequests(customizer -> customizer
@@ -98,5 +104,19 @@ public class SecurityConfig {
         log.info("deafult is configured");
 
         return http.build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(List.of("*"));
+
+        configuration.setAllowedOriginPatterns(List.of("http://localhost:[*]", "https://localhost:[*]"));
+        configuration.setAllowedMethods(List.of("*"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
