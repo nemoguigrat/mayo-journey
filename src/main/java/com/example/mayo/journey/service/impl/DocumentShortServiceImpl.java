@@ -59,6 +59,7 @@ public class DocumentShortServiceImpl implements DocumentShortService {
                 .themeId(documentShort.getDocumentIndex().getTheme().getId())
                 .address(documentShort.getAddress())
                 .name(documentShort.getName())
+                .description(documentShort.getDescription())
                 .placemarks(placemarks.stream().map(this::buildPlacemarkShort).collect(Collectors.toList()));
 
         index.ifPresent(documentIndex -> builder.documentIndexId(documentIndex.getId())
