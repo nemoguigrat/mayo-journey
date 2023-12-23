@@ -11,6 +11,8 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE)
 public class ThemeResponse {
 
+    Long id;
+
     String name;
 
     String description;

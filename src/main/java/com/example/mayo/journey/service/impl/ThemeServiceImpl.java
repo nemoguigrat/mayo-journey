@@ -27,6 +27,7 @@ public class ThemeServiceImpl implements ThemeService {
 
     private ThemeResponse buildThemeResponse(Theme theme) {
         return ThemeResponse.builder()
+                .id(theme.getId())
                 .name(theme.getName())
                 .description(theme.getDescription())
                 .build();
