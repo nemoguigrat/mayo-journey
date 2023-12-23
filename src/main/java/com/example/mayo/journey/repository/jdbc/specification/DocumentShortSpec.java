@@ -39,9 +39,9 @@ public class DocumentShortSpec {
             }
             // нужно для count-query в запросах с пагинацией
             if (Long.class != query.getResultType()) {
-                Fetch<Object, Object> index = root.fetch(DocumentShort.Fields.documentIndex);
-                index.fetch(DocumentIndex.Fields.placemarks).fetch("attachment");
-                index.fetch(DocumentIndex.Fields.theme);
+                Fetch<Object, Object> index = root.fetch(DocumentShort.Fields.documentIndex, JoinType.LEFT);
+                index.fetch(DocumentIndex.Fields.placemarks, JoinType.LEFT).fetch("attachment", JoinType.LEFT);
+                index.fetch(DocumentIndex.Fields.theme, JoinType.LEFT);
                 query.distinct(true);
             }
 
